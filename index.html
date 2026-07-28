@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Dashboard</title>
+    <style>
+        :root{
+            --navy: #0f2436;
+            --navy-2: #16324a;
+            --blue: #2f6fa3;
+            --blue-light: #e5eef5;
+            --row-alt: #f4f8fb;
+            --border: #d7e2ea;
+            --text: #1c2b36;
+            --muted: #5c7284;
+            --accent-frozen: #3f7bbf;
+            --accent-dry: #7a5c3f;
+            --accent-produce: #3f9b5c;
+            --bg: #eef2f5;
+        }
+
+        *{ box-sizing: border-box; }
+
+        body{ margin: 0; font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); }
+
+        #dashboard{
+            display: grid;
+            height: 100vh;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 64px 1fr 90px;
+            background: var(--bg);
+        }
+
+        /* ---- Top bar ---- */
+        #home {
+            grid-column: span 2;
+            background: var(--navy);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        /* ---- Left: pallet storage, scrolls vertically through production lines ---- */
+        #palletStorage {
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+            padding: 18px 20px;
+        }
+
+        #palletSection{
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        /* ---- One production line block ---- */
+        .production-line{
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(15,36,54,0.06);
+        }
+
+        .production-line-header{
+            background: var(--navy-2);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            padding: 10px 16px;
+        }
+
+        /* ---- One location lane (A or B) inside a production line ---- */
+        .location-lane{
+            padding: 10px 16px;
+        }
+        .location-lane + .location-lane{
+            border-top: 1px solid var(--border);
+        }
+
+        .location-label{
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        /* horizontal scroll strip */
+        .lane-scroll{
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+        .lane-scroll::-webkit-scrollbar{ height: 6px; }
+        .lane-scroll::-webkit-scrollbar-thumb{ background: var(--border); border-radius: 4px; }
+        .lane-scroll::-webkit-scrollbar-track{ background: transparent; }
+
+        /* ---- Compact pallet tile ---- */
+        .pallet-tile{
+            flex: 0 0 auto;
+            width: 108px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform .1s ease, box-shadow .1s ease;
+        }
+        .pallet-tile:hover{
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(15,36,54,0.15);
+        }
+
+        .tile-header{
+            background: var(--navy);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            padding: 4px 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .tile-dot{
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .tile-body{
+            background: var(--blue-light);
+            padding: 10px 6px;
+            text-align: center;
+        }
+        .tile-name{
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--navy-2);
+            line-height: 1.25;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .tile-spec{
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        /* ---- Right panel (clanogram / pick-zone view) ---- */
+        #layoutBackPics {
+            overflow-y: auto;
+            padding: 18px 20px;
+            border-left: 1px solid var(--border);
+        }
+        #layoutBackPics .placeholder-label{
+            font-size: 13px;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        /* ---- Bottom strip: rack overview ---- */
+        #layoutRack {
+            grid-column: span 2;
+            background: #fff;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        /* ---- Pallet details pop-up ---- */
+        .modal-overlay{
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(7, 20, 31, 0.68);
+        }
+        .modal-overlay.is-open{
+            display: flex;
+        }
+        .pallet-modal{
+            width: min(440px, 100%);
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            box-shadow: 0 18px 50px rgba(7,20,31,0.3);
+            animation: modalIn .16s ease-out;
+        }
+        @keyframes modalIn{
+            from{ opacity: 0; transform: translateY(8px) scale(.98); }
+            to{ opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modal-header{
+            min-height: 52px;
+            padding: 10px 12px 10px 16px;
+            border-left: 6px solid var(--accent-frozen);
+            background: var(--navy);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .modal-heading{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+        .modal-pallet-id{
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: .3px;
+        }
+        .modal-type-pill{
+            padding: 3px 9px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.12);
+            color: #cfe3f5;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
+        .modal-close{
+            width: 34px;
+            height: 34px;
+            border: 0;
+            border-radius: 5px;
+            background: transparent;
+            color: #fff;
+            font-size: 26px;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .modal-close:hover,
+        .modal-close:focus-visible{
+            background: rgba(255,255,255,.12);
+            outline: none;
+        }
+        .modal-body{
+            min-height: 160px;
+            padding: 34px 20px;
+            background: var(--blue-light);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-product-name{
+            margin: 0;
+            color: var(--navy-2);
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .modal-product-spec{
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .modal-footer{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 1px solid var(--border);
+        }
+        .modal-footer-cell{
+            padding: 12px 14px;
+            background: var(--row-alt);
+        }
+        .modal-footer-cell + .modal-footer-cell{
+            border-left: 1px solid var(--border);
+            text-align: right;
+        }
+        .modal-footer-label{
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
+        .modal-footer-value{
+            display: block;
+            margin-top: 2px;
+            color: var(--navy-2);
+            font-size: 14px;
+            font-weight: 600;
+        }
+        body.modal-open{
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="dashboard">
+        <div id="home">Replenishment Dashboard</div>
+
+        <div id="palletStorage">
+            <div id="palletSection">
+                <!-- Production Line 1 -->
+                <div class="production-line" id="production-1">
+                    <div class="production-line-header">Production Line 1</div>
+
+                    <div class="location-lane" id="production-1-A">
+                        <div class="location-label">Location A</div>
+                        <div class="lane-scroll" id="production-1-A-scroll">
+                            <!-- pallet tiles injected here by JS -->
+                        </div>
+                    </div>
+
+                    <div class="location-lane" id="production-1-B">
+                        <div class="location-label">Location B</div>
+                        <div class="lane-scroll" id="production-1-B-scroll">
+                            <!-- pallet tiles injected here by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Production Line 2 -->
+                <div class="production-line" id="production-2">
+                    <div class="production-line-header">Production Line 2</div>
+
+                    <div class="location-lane" id="production-2-A">
+                        <div class="location-label">Location A</div>
+                        <div class="lane-scroll" id="production-2-A-scroll"></div>
+                    </div>
+
+                    <div class="location-lane" id="production-2-B">
+                        <div class="location-label">Location B</div>
+                        <div class="lane-scroll" id="production-2-B-scroll"></div>
+                    </div>
+                </div>
+
+                <!-- Freezer Rack -->
+                <div class="production-line" id="freezer">
+                    <div class="production-line-header">Freezer Rack</div>
+
+                    <div class="location-lane" id="freezer-A">
+                        <div class="location-label">Location A</div>
+                        <div class="lane-scroll" id="freezer-A-scroll"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="layoutBackPics">
+            <p class="placeholder-label">Pick-zone / clanogram panel goes here</p>
+        </div>
+
+        <div id="layoutRack">Rack overview / summary strip goes here</div>
+    </div>
+
+    <div class="modal-overlay" id="palletModal" aria-hidden="true">
+        <section class="pallet-modal" role="dialog" aria-modal="true" aria-labelledby="modalProductName">
+            <div class="modal-header" id="modalHeader">
+                <div class="modal-heading">
+                    <span class="modal-pallet-id" id="modalPalletId"></span>
+                    <span class="modal-type-pill" id="modalProductType"></span>
+                </div>
+                <button class="modal-close" id="modalClose" type="button" aria-label="Close pallet details">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-product-name" id="modalProductName"></h2>
+                <p class="modal-product-spec" id="modalProductSpec"></p>
+            </div>
+            <div class="modal-footer">
+                <div class="modal-footer-cell">
+                    <span class="modal-footer-label">Pick Zone</span>
+                    <span class="modal-footer-value" id="modalPickZone"></span>
+                </div>
+                <div class="modal-footer-cell">
+                    <span class="modal-footer-label">Location</span>
+                    <span class="modal-footer-value" id="modalLocation"></span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ╔══════════════════════════════════════════════════════════════╗
+        // ║                                                                ║
+        // ║                    ⚠   R E S T R I C T E D                    ║
+        // ║                         E D I T   Z O N E                      ║
+        // ║                                                                ║
+        // ║  ──────────────────────────────────────────────────────────  ║
+        // ║                                                                ║
+        // ║   You may ONLY edit the pallet list directly below this        ║
+        // ║   banner. Everything above powers the layout — leave it        ║
+        // ║   untouched.                                                    ║
+        // ║                                                                ║
+        // ║     +  Add a pallet     →  copy a line, change the values      ║
+        // ║     −  Remove a pallet  →  delete its line                     ║
+        // ║                                                                ║
+        // ╚══════════════════════════════════════════════════════════════╝
+
+        class Pallet {
+            constructor(id, productName, spec, productType, productionLine, lane, pickZone, location) {
+                this.id = id;
+                this.productName = productName;
+                this.spec = spec;
+                this.productType = productType; // "Frozen" | "Dry" | "Produce"
+                this.productionLine = productionLine; // e.g. "production-1"
+                this.lane = lane; // "A" or "B" — controls which dashboard row it appears in
+                this.pickZone = pickZone; // shown inside the pop-up
+                this.location = location; // shown inside the pop-up
+            }
+        }
+
+        const pallets = [
+            new Pallet("P1A-1", "Soy Glaze", "5 gal", "Dry", "production-1", "A", "Pick Zone 1", "Location 1"),
+            new Pallet("P1A-2", "Sesame Oil", "1 gal", "Dry", "production-1", "A", "Pick Zone 1", "Location 2"),
+            new Pallet("P1A-3", "Rice Vinegar", "1 gal", "Dry", "production-1", "A", "Pick Zone 1", "Location 3"),
+            new Pallet("P1A-4", "Teriyaki Base", "5 gal", "Dry", "production-1", "A", "Pick Zone 1", "Location 4"),
+            new Pallet("P1B-1", "Chicken Pieces", "12oz", "Frozen", "production-1", "B", "Pick Zone 2", "Location 1"),
+            new Pallet("P1B-1", "Chicken Thigh", "12oz", "Frozen", "production-1", "B", "Pick Zone 2", "Location 1"),
+            new Pallet("P1B-2", "Salmon", "20oz", "Frozen", "production-1", "B", "Pick Zone 2", "Location 2"),
+            new Pallet("P1B-3", "Shrimp Tail Off", "10oz", "Frozen", "production-1", "B", "Pick Zone 2", "Location 3"),
+
+            new Pallet("P2A-1", "Black Bean Patty", "8oz", "Produce", "production-2", "A", "Pick Zone 3", "Location 1"),
+            new Pallet("P2A-2", "Red Pepper", "5lb", "Produce", "production-2", "A", "Pick Zone 3", "Location 2"),
+            new Pallet("P2B-1", "Chorizo", "10oz", "Produce", "production-2", "B", "Pick Zone 4", "Location 1"),
+            new Pallet("P2B-2", "Pulled Pork", "10oz", "Frozen", "production-2", "B", "Pick Zone 4", "Location 2"),
+
+            new Pallet("FR-1A", "Salmon", "20oz", "Frozen", "freezer", "A", "Pick Zone 8", "Location 1"),
+            new Pallet("FR-1B", "Hot Italian Sausage", "10oz", "Frozen", "freezer", "A", "Pick Zone 8", "Location 2"),
+            new Pallet("FR-1C", "Cooked Pulled Pork", "10oz", "Frozen", "freezer", "A", "Pick Zone 8", "Location 3"),
+        ];
+
+        // ── END OF EDIT ZONE ──────────────────────────────────────────────
+
+        const typeColor = {
+            "Frozen": "var(--accent-frozen)",
+            "Dry": "var(--accent-dry)",
+            "Produce": "var(--accent-produce)"
+        };
+
+        function renderTile(pallet) {
+            const color = typeColor[pallet.productType] || "var(--accent-frozen)";
+            return `
+                <div class="pallet-tile" id="${pallet.id}" data-pallet-id="${pallet.id}" role="button" tabindex="0" aria-label="View details for ${pallet.productName}">
+                    <div class="tile-header">
+                        <span>${pallet.id}</span>
+                        <span class="tile-dot" style="background:${color}"></span>
+                    </div>
+                    <div class="tile-body">
+                        <div class="tile-name">${pallet.productName}</div>
+                        <div class="tile-spec">${pallet.spec}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Group pallets by production line + location, then fill each lane
+        const lanes = {};
+        pallets.forEach(p => {
+            const key = `${p.productionLine}-${p.lane}-scroll`;
+            if (!lanes[key]) lanes[key] = [];
+            lanes[key].push(p);
+        });
+
+        Object.entries(lanes).forEach(([laneId, list]) => {
+            const el = document.getElementById(laneId);
+            if (el) el.innerHTML = list.map(renderTile).join("");
+        });
+
+        // Open and close the pallet details pop-up
+        const modal = document.getElementById("palletModal");
+        const modalClose = document.getElementById("modalClose");
+        let lastFocusedTile = null;
+
+        function openPalletModal(pallet) {
+            const accent = typeColor[pallet.productType] || "var(--accent-frozen)";
+
+            document.getElementById("modalHeader").style.borderLeftColor = accent;
+            document.getElementById("modalPalletId").textContent = pallet.id;
+            document.getElementById("modalProductType").textContent = pallet.productType;
+            document.getElementById("modalProductName").textContent = pallet.productName || "Empty";
+            document.getElementById("modalProductSpec").textContent = pallet.spec || "No product specification";
+            document.getElementById("modalPickZone").textContent = pallet.pickZone || "Not assigned";
+            document.getElementById("modalLocation").textContent = pallet.location || "Not assigned";
+
+            modal.classList.add("is-open");
+            modal.setAttribute("aria-hidden", "false");
+            document.body.classList.add("modal-open");
+            modalClose.focus();
+        }
+
+        function closePalletModal() {
+            modal.classList.remove("is-open");
+            modal.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("modal-open");
+            if (lastFocusedTile) lastFocusedTile.focus();
+        }
+
+        function selectPalletTile(tile) {
+            const pallet = pallets.find(p => p.id === tile.dataset.palletId);
+            if (!pallet) return;
+            lastFocusedTile = tile;
+            openPalletModal(pallet);
+        }
+
+        document.getElementById("palletSection").addEventListener("click", event => {
+            const tile = event.target.closest(".pallet-tile");
+            if (tile) selectPalletTile(tile);
+        });
+
+        document.getElementById("palletSection").addEventListener("keydown", event => {
+            const tile = event.target.closest(".pallet-tile");
+            if (tile && (event.key === "Enter" || event.key === " ")) {
+                event.preventDefault();
+                selectPalletTile(tile);
+            }
+        });
+
+        modalClose.addEventListener("click", closePalletModal);
+
+        modal.addEventListener("click", event => {
+            if (event.target === modal) closePalletModal();
+        });
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape" && modal.classList.contains("is-open")) {
+                closePalletModal();
+            }
+        });
+    </script>
+</body>
+</html>
