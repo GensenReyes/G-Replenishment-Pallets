@@ -18,6 +18,13 @@
             --accent-dry: #7a5c3f;
             --accent-produce: #3f9b5c;
             --bg: #eef2f5;
+
+            /* Layout / rack section — a deliberately different color
+               family from --navy, so it reads as "this is the rack
+               layout, not a pallet" */
+             --layout-dark:  #355C57;
+            --layout-mid:   #4F7D77;
+            --layout-light: #E8F1EF;
         }
 
         *{ box-sizing: border-box; }
@@ -174,6 +181,115 @@
             font-style: italic;
         }
 
+        /* ---- Planogram / pick-zone panel ---- */
+        #planogramSection{
+            display: flex;
+            flex-direction: column;
+            gap: 26px;
+        }
+
+        /* "Layout" — encloses one rack's worth of pick zones. There can
+           be more than one (e.g. a second rack elsewhere in the
+           building), each rendered as its own layout-group. */
+        .layout-group{
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(15,36,54,0.06);
+        }
+
+        .layout-header{
+            background: var(--layout-dark);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            padding: 12px 16px;
+        }
+
+        .layout-zones{
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .planogram-zone{
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .planogram-zone-header{
+            background: var(--layout-mid);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            padding: 8px 14px;
+        }
+
+        .planogram-row{
+            display: grid;
+            grid-template-columns: repeat(var(--cols, 4), 1fr);
+        }
+        .planogram-row + .planogram-row{
+            border-top: 1px solid var(--border);
+        }
+
+        .planogram-cell{
+            padding: 8px 10px 10px;
+            border-left: 1px solid var(--border);
+            min-width: 0;
+        }
+        .planogram-cell:first-child{
+            border-left: 0;
+        }
+        .planogram-cell.is-empty{
+            background: var(--row-alt);
+        }
+        .planogram-cell:not(.is-empty){
+            cursor: pointer;
+            transition: background .1s ease;
+        }
+        .planogram-cell:not(.is-empty):hover,
+        .planogram-cell:not(.is-empty):focus-visible{
+            background: var(--layout-light);
+            outline: none;
+        }
+
+        .cell-location{
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+            background: var(--layout-mid);
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+        .cell-product{
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--navy-2);
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .cell-spec{
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+        .cell-itemid{
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
         /* ---- Bottom strip: rack overview ---- */
         #layoutRack {
             grid-column: span 2;
@@ -314,6 +430,87 @@
         body.modal-open{
             overflow: hidden;
         }
+
+        /* ══════════════════════════════════════════════════════════════
+           SMALL SCREENS
+           Below this width: stop trying to cram the desktop grid in —
+           stack everything, let the page scroll naturally, and shrink
+           the planogram down to something tappable while KEEPING the
+           real rack shape (row/column counts never change — that's the
+           actual physical layout the picker is scanning against).
+           ══════════════════════════════════════════════════════════════ */
+        @media (max-width: 860px){
+            body{
+                height: auto;
+            }
+            #dashboard{
+                height: auto;
+                min-height: 100vh;
+                display: block;
+            }
+            #home{
+                height: 56px;
+                font-size: 16px;
+            }
+            #palletStorage,
+            #layoutBackPics{
+                overflow-y: visible;
+                border: 0;
+                padding: 14px 14px 0;
+            }
+            #layoutBackPics{
+                border-top: 1px solid var(--border);
+                margin-top: 4px;
+                padding-top: 18px;
+            }
+            #layoutRack{
+                padding: 12px 14px;
+                height: auto;
+            }
+
+            /* Pallet tiles: a touch bigger so they're easy to tap */
+            .pallet-tile{ width: 96px; }
+
+            /* Planogram: shrink each slot down to a compact "light"
+               showing just the location number; full product info opens
+               in the tap popup instead of trying to fit on the shelf */
+            .planogram-cell{
+                padding: 6px 3px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 46px;
+                text-align: center;
+            }
+            .cell-location{
+                margin-bottom: 0;
+                font-size: 12px;
+                padding: 3px 0;
+                width: 100%;
+            }
+            .cell-product,
+            .cell-spec,
+            .cell-itemid{
+                display: none;
+            }
+
+            /* Popups become a bottom sheet instead of a centered card —
+               easier to reach with a thumb and avoids tiny cramped modals */
+            .modal-overlay{
+                align-items: flex-end;
+                padding: 0;
+            }
+            .pallet-modal{
+                width: 100%;
+                border-radius: 14px 14px 0 0;
+                animation: sheetIn .18s ease-out;
+            }
+            @keyframes sheetIn{
+                from{ opacity: 0; transform: translateY(24px); }
+                to{ opacity: 1; transform: translateY(0); }
+            }
+        }
     </style>
 </head>
 <body>
@@ -398,7 +595,9 @@
         </div>
 
         <div id="layoutBackPics">
-            <p class="placeholder-label">Pick-zone / clanogram panel goes here</p>
+            <div id="planogramSection">
+                <!-- pick-zone grids injected here by JS -->
+            </div>
         </div>
 
         <div id="layoutRack">Rack overview / summary strip goes here</div>
@@ -429,6 +628,33 @@
             </div>
         </section>
     </div>
+
+    <div class="modal-overlay" id="planogramModal" aria-hidden="true">
+        <section class="pallet-modal" role="dialog" aria-modal="true" aria-labelledby="planoModalProductName">
+            <div class="modal-header" id="planoModalHeader" style="border-left-color: var(--layout-mid); background: var(--layout-dark);">
+                <div class="modal-heading">
+                    <span class="modal-pallet-id" id="planoModalLocation"></span>
+                    <span class="modal-type-pill" id="planoModalZone"></span>
+                </div>
+                <button class="modal-close" id="planoModalClose" type="button" aria-label="Close location details">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-product-name" id="planoModalProductName"></h2>
+                <p class="modal-product-spec" id="planoModalProductSpec"></p>
+            </div>
+            <div class="modal-footer">
+                <div class="modal-footer-cell">
+                    <span class="modal-footer-label">Item Id</span>
+                    <span class="modal-footer-value" id="planoModalItemId"></span>
+                </div>
+                <div class="modal-footer-cell">
+                    <span class="modal-footer-label">Location</span>
+                    <span class="modal-footer-value" id="planoModalLocationValue"></span>
+                </div>
+            </div>
+        </section>
+    </div>
+
 
     <script>
         // ╔══════════════════════════════════════════════════════════════╗
@@ -687,6 +913,172 @@
         ];
 
         // ── END OF EDIT ZONE ──────────────────────────────────────────────
+
+        // ╔══════════════════════════════════════════════════════════════╗
+        // ║   PLANOGRAM DATA (right panel)                                ║
+        // ║   A "layout" is one physical rack — it encloses however many  ║
+        // ║   pick zones sit on it. Add more layouts to this array for    ║
+        // ║   other racks (e.g. the one behind the picker) — each will    ║
+        // ║   render as its own enclosed card, stacked underneath.        ║
+        // ║                                                                ║
+        // ║   Inside a pick zone, rows/cells work the same as before:     ║
+        // ║   each row is a list of cells, `null` = a blank gap slot.     ║
+        // ╚══════════════════════════════════════════════════════════════╝
+
+        const layouts = [
+            {
+                name: "Layout 1",
+                pickZones: [
+                    {
+                        zone: 1,
+                        rows: [
+                            [
+                                { location: 1, product: "FreshRealm Dish Teriyaki Salmon Grain Bowl", spec: "10.05 oz", itemId: "123920" },
+                                { location: 2, product: "Project LLC dba Standard Meat Company Pork Chop (Boneless)", spec: "12 oz", itemId: "124161" },
+                                { location: 3, product: "Epicurean Butter Co Salted Butter", spec: "0.5 oz", itemId: "123867" },
+                                { location: 4, product: "Brooke Farms Feta Cheese (Block)", spec: "1.5 oz", itemId: "123850" },
+                                { location: 5, product: "Project LLC dba Standard Meat Company Pork Roast Loin", spec: "12 oz", itemId: "124162" },
+                                { location: 6, product: "Syracuse Food Group, LLC dba Syracuse's Sausage Company Hot Italian Pork Sausage", spec: "10 oz", itemId: "124156" }
+                            ],
+                            [
+                                { location: 7, product: "Rastelli Brothers, Inc. dba Rastelli Foods Chicken Thigh (Boneless, Whole, Skinless)", spec: "12 oz", itemId: "124177" },
+                                { location: 8, product: "Ocean Enterprises, LLC dba Ocean World Ventures, LLC Shrimp Tail Off 31 40 Ct", spec: "10 oz", itemId: "124164" },
+                                { location: 9, product: "Blue Apron Boneless Skinless Chicken Breast (Pieces)", spec: "10 oz", itemId: "124792" },
+                                { location: 10, product: "Rastelli Brothers, Inc. dba Rastelli Foods Cooked Pulled Pork", spec: "10 oz", itemId: "124151" }
+                            ],
+                            [
+                                { location: 11, product: "DOS Project LLC dba Standard Meat Company Ny Strip Steak 2 Each 10oz", spec: "20 oz", itemId: "124159" },
+                                null,
+                                { location: 12, product: "Actual Veggies, Inc. Black Bean & Red Pepper Patties", spec: "8 oz", itemId: "124148" },
+                                { location: 13, product: "Syracuse Food Group, LLC dba Syracuse's Sausage Company Chorizo", spec: "10 oz", itemId: "124149" }
+                            ]
+                        ]
+                    }
+                    // Add more pick zones on this same rack the same way:
+                    // { zone: 2, rows: [ [ {...}, {...} ], [ {...}, null, {...} ] ] }
+                ]
+            }
+            // Add another rack entirely as a new layout, e.g.:
+            // {
+            //     name: "Layout 2",
+            //     pickZones: [ { zone: 2, rows: [ [ {...} ] ] } ]
+            // }
+        ];
+
+        function renderPlanogramCell(cell, layoutName, zoneNum) {
+            if (!cell) {
+                return `<div class="planogram-cell is-empty"></div>`;
+            }
+            return `
+                <div class="planogram-cell" data-layout="${layoutName}" data-zone="${zoneNum}" data-location="${cell.location}" role="button" tabindex="0" aria-label="View details for location ${cell.location}">
+                    <span class="cell-location">Location: ${cell.location}</span>
+                    <div class="cell-product">${cell.product}</div>
+                    <div class="cell-spec">${cell.spec}</div>
+                    <div class="cell-itemid">Item id: ${cell.itemId}</div>
+                </div>
+            `;
+        }
+
+        function renderPlanogramZone(pickZone, layoutName) {
+            const rowsHtml = pickZone.rows.map(row => `
+                <div class="planogram-row" style="--cols: ${row.length};">
+                    ${row.map(cell => renderPlanogramCell(cell, layoutName, pickZone.zone)).join("")}
+                </div>
+            `).join("");
+
+            return `
+                <div class="planogram-zone">
+                    <div class="planogram-zone-header">Pick Zone ${pickZone.zone}</div>
+                    ${rowsHtml}
+                </div>
+            `;
+        }
+
+        function renderLayoutGroup(layout) {
+            const zonesHtml = layout.pickZones.map(pz => renderPlanogramZone(pz, layout.name)).join("");
+            return `
+                <div class="layout-group">
+                    <div class="layout-header">${layout.name}</div>
+                    <div class="layout-zones">${zonesHtml}</div>
+                </div>
+            `;
+        }
+
+        const planogramEl = document.getElementById("planogramSection");
+        if (planogramEl) {
+            planogramEl.innerHTML = layouts.map(renderLayoutGroup).join("");
+        }
+
+        // Flat lookup so a tapped cell can find its own data quickly
+        const planogramCellMap = {};
+        layouts.forEach(layout => {
+            layout.pickZones.forEach(pz => {
+                pz.rows.forEach(row => {
+                    row.forEach(cell => {
+                        if (cell) planogramCellMap[`${layout.name}-${pz.zone}-${cell.location}`] = cell;
+                    });
+                });
+            });
+        });
+
+        // Open and close the planogram (pick-zone) details pop-up
+        const planogramModal = document.getElementById("planogramModal");
+        const planogramModalClose = document.getElementById("planoModalClose");
+        let lastFocusedCell = null;
+
+        function openPlanogramModal(cell, layoutName, zoneNum) {
+            document.getElementById("planoModalLocation").textContent = `Location ${cell.location}`;
+            document.getElementById("planoModalZone").textContent = `${layoutName} · Pick Zone ${zoneNum}`;
+            document.getElementById("planoModalProductName").textContent = cell.product;
+            document.getElementById("planoModalProductSpec").textContent = cell.spec;
+            document.getElementById("planoModalItemId").textContent = cell.itemId;
+            document.getElementById("planoModalLocationValue").textContent = cell.location;
+
+            planogramModal.classList.add("is-open");
+            planogramModal.setAttribute("aria-hidden", "false");
+            document.body.classList.add("modal-open");
+            planogramModalClose.focus();
+        }
+
+        function closePlanogramModal() {
+            planogramModal.classList.remove("is-open");
+            planogramModal.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("modal-open");
+            if (lastFocusedCell) lastFocusedCell.focus();
+        }
+
+        function selectPlanogramCell(cellEl) {
+            const cell = planogramCellMap[`${cellEl.dataset.layout}-${cellEl.dataset.zone}-${cellEl.dataset.location}`];
+            if (!cell) return;
+            lastFocusedCell = cellEl;
+            openPlanogramModal(cell, cellEl.dataset.layout, cellEl.dataset.zone);
+        }
+
+        if (planogramEl) {
+            planogramEl.addEventListener("click", event => {
+                const cellEl = event.target.closest(".planogram-cell:not(.is-empty)");
+                if (cellEl) selectPlanogramCell(cellEl);
+            });
+            planogramEl.addEventListener("keydown", event => {
+                const cellEl = event.target.closest(".planogram-cell:not(.is-empty)");
+                if (cellEl && (event.key === "Enter" || event.key === " ")) {
+                    event.preventDefault();
+                    selectPlanogramCell(cellEl);
+                }
+            });
+        }
+
+        planogramModalClose.addEventListener("click", closePlanogramModal);
+
+        planogramModal.addEventListener("click", event => {
+            if (event.target === planogramModal) closePlanogramModal();
+        });
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape" && planogramModal.classList.contains("is-open")) {
+                closePlanogramModal();
+            }
+        });
 
         const typeColor = {
             "Frozen": "var(--accent-frozen)",
