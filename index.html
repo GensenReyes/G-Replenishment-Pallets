@@ -30,14 +30,18 @@
             grid-template-columns: 2fr 1fr;
             grid-template-rows: 64px 1fr 90px;
             background: var(--bg);
+
         }
 
         /* ---- Top bar ---- */
         #home {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
             grid-column: span 2;
             background: var(--navy);
             display: flex;
-            align-items: center;
+            align-items: center;   
             padding: 0 24px;
             color: #fff;
             font-size: 18px;
@@ -320,14 +324,7 @@
             <div id="palletSection">
                 <!-- Production Line 1 -->
                 <div class="production-line" id="production-1">
-                    <div class="production-line-header">Production Line 1</div>
-
-                    <div class="location-lane" id="production-1-A">
-                        <div class="location-label">Location A</div>
-                        <div class="lane-scroll" id="production-1-A-scroll">
-                            <!-- pallet tiles injected here by JS -->
-                        </div>
-                    </div>
+                    <div class="production-line-header">Zone 1</div>
 
                     <div class="location-lane" id="production-1-B">
                         <div class="location-label">Location B</div>
@@ -339,7 +336,7 @@
 
                 <!-- Production Line 2 -->
                 <div class="production-line" id="production-2">
-                    <div class="production-line-header">Production Line 2</div>
+                    <div class="production-line-header">Zone  2</div>
 
                     <div class="location-lane" id="production-2-A">
                         <div class="location-label">Location A</div>
@@ -351,6 +348,38 @@
                         <div class="lane-scroll" id="production-2-B-scroll"></div>
                     </div>
                 </div>
+                <!-- Production Line 3 -->
+                <div class="production-line" id="production-3">
+                    <div class="production-line-header">Zone  3</div>
+
+                    <div class="location-lane" id="production-3-A">
+                        <div class="location-label">Location A</div>
+                        <div class="lane-scroll" id="production-3-A-scroll"></div>
+                    </div>
+                </div> 
+                <!-- Production Line 4 -->
+                <div class="production-line" id="production-4">
+                    <div class="production-line-header">Zone  4</div>
+
+                    <div class="location-lane" id="production-4-A">
+                        <div class="location-label">Location A</div>
+                        <div class="lane-scroll" id="production-4-A-scroll"></div>
+                    </div>
+                </div>
+                <!-- Production Line 5 -->
+                <div class="production-line" id="production-5">
+                    <div class="production-line-header">Zone  5</div>
+
+                    <div class="location-lane" id="production-5-A">
+                        <div class="location-label">Location A</div>
+                        <div class="lane-scroll" id="production-5-A-scroll"></div>
+                    </div>
+
+                    <div class="location-lane" id="production-5-B">
+                        <div class="location-label">Location B</div>
+                        <div class="lane-scroll" id="production-5-B-scroll"></div>
+                    </div>
+                </div>                 
 
                 <!-- Freezer Rack -->
                 <div class="production-line" id="freezer">
@@ -359,6 +388,10 @@
                     <div class="location-lane" id="freezer-A">
                         <div class="location-label">Location A</div>
                         <div class="lane-scroll" id="freezer-A-scroll"></div>
+                    </div>
+                    <div class="location-lane" id="freezer-B">
+                        <div class="location-label">Location B</div>
+                        <div class="lane-scroll" id="freezer-B-scroll"></div>
                     </div>
                 </div>
             </div>
@@ -428,23 +461,229 @@
         }
 
         const pallets = [
-            new Pallet("P1A-1", "Soy Glaze", "5 gal", "Dry", "production-1", "A", "Pick Zone 1", "Location 1"),
-            new Pallet("P1A-2", "Sesame Oil", "1 gal", "Dry", "production-1", "A", "Pick Zone 1", "Location 2"),
-            new Pallet("P1A-3", "Rice Vinegar", "1 gal", "Dry", "production-1", "A", "Pick Zone 1", "Location 3"),
-            new Pallet("P1A-4", "Teriyaki Base", "5 gal", "Dry", "production-1", "A", "Pick Zone 1", "Location 4"),
-            new Pallet("P1B-1", "Chicken Pieces", "12oz", "Frozen", "production-1", "B", "Pick Zone 2", "Location 1"),
-            new Pallet("P1B-1", "Chicken Thigh", "12oz", "Frozen", "production-1", "B", "Pick Zone 2", "Location 1"),
-            new Pallet("P1B-2", "Salmon", "20oz", "Frozen", "production-1", "B", "Pick Zone 2", "Location 2"),
-            new Pallet("P1B-3", "Shrimp Tail Off", "10oz", "Frozen", "production-1", "B", "Pick Zone 2", "Location 3"),
+            // ╔══════════════════════════════════════════════════════════════╗
+            // ║                         Z O N E   1                          ║
+            // ╚══════════════════════════════════════════════════════════════╝
+            new Pallet("Z1-B1", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B2", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B3", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B4", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B5", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B6", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B7", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B8", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B9", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B10", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B11", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B12", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B13", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B14", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B15", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B16", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B17", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B18", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B19", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B20", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B21", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B22", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B23", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B24", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B25", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B26", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B27", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B28", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B29", "", "", "", "production-1", "B", "", ""),
+            new Pallet("Z1-B30", "", "", "", "production-1", "B", "", ""),
+            // ╔══════════════════════════════════════════════════════════════╗
+            // ║                         Z O N E   2                          ║
+            // ╚══════════════════════════════════════════════════════════════╝
+            new Pallet("Z2-A1", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A2", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A3", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A4", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A5", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A6", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A7", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A8", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A9", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A10", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A11", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A12", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A13", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A14", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A15", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A16", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A17", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A18", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A19", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A20", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A21", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A22", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A23", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A24", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A25", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A26", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A27", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A28", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A29", "", "", "", "production-2", "A", "", ""),
+            new Pallet("Z2-A30", "", "", "", "production-2", "A", "", ""),
 
-            new Pallet("P2A-1", "Black Bean Patty", "8oz", "Produce", "production-2", "A", "Pick Zone 3", "Location 1"),
-            new Pallet("P2A-2", "Red Pepper", "5lb", "Produce", "production-2", "A", "Pick Zone 3", "Location 2"),
-            new Pallet("P2B-1", "Chorizo", "10oz", "Produce", "production-2", "B", "Pick Zone 4", "Location 1"),
-            new Pallet("P2B-2", "Pulled Pork", "10oz", "Frozen", "production-2", "B", "Pick Zone 4", "Location 2"),
+            new Pallet("Z2-B1", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B7", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B8", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B9", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B10", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B11", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B12", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B13", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B14", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B15", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B16", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B17", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B18", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B19", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B20", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B21", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B22", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B23", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B24", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B25", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B26", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B27", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B28", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B29", "", "", "", "production-2", "B", "", ""),
+            new Pallet("Z2-B30", "", "", "", "production-2", "B", "", ""),
+            // ╔══════════════════════════════════════════════════════════════╗
+            // ║                         Z O N E   3                          ║
+            // ╚══════════════════════════════════════════════════════════════╝
+            new Pallet("Z3-A1", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A2", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A3", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A4", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A5", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A6", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A7", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A8", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A9", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A10", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A11", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A12", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A13", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A14", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A15", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A16", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A17", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A18", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A19", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A20", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A21", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A22", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A23", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A24", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A25", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A26", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A27", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A28", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A29", "", "", "", "production-3", "A", "", ""),
+            new Pallet("Z3-A30", "", "", "", "production-3", "A", "", ""),
+            // ╔══════════════════════════════════════════════════════════════╗
+            // ║                         Z O N E   4                          ║
+            // ╚══════════════════════════════════════════════════════════════╝
+            new Pallet("Z4-A1", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A2", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A3", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A4", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A5", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A6", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A7", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A8", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A9", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A10", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A11", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A12", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A13", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A14", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A15", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A16", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A17", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A18", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A19", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A20", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A21", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A22", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A23", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A24", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A25", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A26", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A27", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A28", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A29", "", "", "", "production-4", "A", "", ""),
+            new Pallet("Z4-A30", "", "", "", "production-4", "A", "", ""),
+            // ╔══════════════════════════════════════════════════════════════╗
+            // ║                         Z O N E   5                          ║
+            // ╚══════════════════════════════════════════════════════════════╝
+            new Pallet("Z5-A1", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A2", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A3", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A4", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A5", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A6", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A7", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A8", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A9", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A10", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A11", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A12", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A13", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A14", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A15", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A16", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A17", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A18", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A19", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A20", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A21", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A22", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A23", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A24", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A25", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A26", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A27", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A28", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A29", "", "", "", "production-5", "A", "", ""),
+            new Pallet("Z5-A30", "", "", "", "production-5", "A", "", ""),
+
+            new Pallet("Z5-B1", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B7", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B8", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B9", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B10", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B11", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B12", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B13", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B14", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B15", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B16", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B17", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B18", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B19", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B20", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B21", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B22", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B23", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B24", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B25", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B26", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B27", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B28", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B29", "", "", "", "production-5", "B", "", ""),
+            new Pallet("Z5-B30", "", "", "", "production-5", "B", "", ""),
+
 
             new Pallet("FR-1A", "Salmon", "20oz", "Frozen", "freezer", "A", "Pick Zone 8", "Location 1"),
             new Pallet("FR-1B", "Hot Italian Sausage", "10oz", "Frozen", "freezer", "A", "Pick Zone 8", "Location 2"),
-            new Pallet("FR-1C", "Cooked Pulled Pork", "10oz", "Frozen", "freezer", "A", "Pick Zone 8", "Location 3"),
+            new Pallet("FR-1C", "Cooked Pulled Pork", "10oz", "Frozen", "freezer", "B", "Pick Zone 8", "Location 3"),
+
         ];
 
         // ── END OF EDIT ZONE ──────────────────────────────────────────────
