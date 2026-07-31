@@ -354,8 +354,8 @@
         .modal-type-pill{
             padding: 3px 9px;
             border-radius: 999px;
-            background: rgba(255,255,255,.12);
-            color: #cfe3f5;
+            background: #ff6600;
+            color: white;
             font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
@@ -1456,7 +1456,7 @@
 
         function openPlanogramModal(cell, layoutName, zoneNum) {
             document.getElementById("planoModalLocation").textContent = `Location ${cell.location}`;
-            document.getElementById("planoModalZone").textContent = `${layoutName} · Pick Zone ${zoneNum}`;
+            document.getElementById("planoModalZone").textContent = `Pick Zone ${zoneNum}`;
             document.getElementById("planoModalProductName").textContent = cell.product;
             document.getElementById("planoModalProductSpec").textContent = cell.spec;
             document.getElementById("planoModalItemId").textContent = cell.itemId;
