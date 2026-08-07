@@ -13,12 +13,10 @@
             --row-alt: #f4f8fb;
             --border: #d7e2ea;
             --text: #1c2b36;
-
             --muted: #5c7284;
             --accent-frozen: #3f7bbf;
             --accent-dry: #7a5c3f;
             --accent-produce: #3f9b5c;
-            --accent-refrigerated: #287F8C;
             --bg: #eef2f5;
 
             /* Layout / rack section — a deliberately different color
@@ -33,18 +31,19 @@
 
         body{ margin: 0; font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); }
 
-        #dashboard{
+/* ==========================
+   TOP BAR
+========================== */
+
+        #dashboard {
             display: grid;
             height: 100vh;
-            grid-template-columns: 2fr 1fr;
-            grid-template-rows: 138px 1fr 90px;
+            grid-template-columns: 1fr;
+            grid-template-rows: 130px 1fr;
             background: var(--bg);
-
         }
 
-        /* ---- Top bar ---- */
         #home {
-            grid-column: span 2;
             display: grid;
             grid-template-columns: 130px 1fr;
             background: var(--navy);
@@ -125,118 +124,17 @@
             border-color: var(--layout-mid);
         }
 
+        .planogram-cell.cell-status-return-to-freezer {
+            background: #69a7e5;   /* light blue */
+            border-left: 3px solid #3f7bbf;
+        }
+
+        .planogram-cell.cell-status-return-to-freezer:hover,
+        .planogram-cell.cell-status-return-to-freezer:focus-visible {
+            background: #b9d5f0;
+        }
         /* ---- Left: pallet storage, scrolls vertically through production lines ---- */
-        #palletStorage {
-            overflow-y: auto;
-            border-right: 1px solid var(--border);
-            padding: 18px 20px;
-        }
 
-        #palletSection{
-            display: flex;
-            flex-direction: column;
-            gap: 22px;
-        }
-
-        /* ---- One production line block ---- */
-        .production-line{
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(15,36,54,0.06);
-        }
-
-        .production-line-header{
-            background: var(--navy-2);
-            color: #fff;
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            padding: 10px 16px;
-        }
-
-        /* ---- One location lane (A or B) inside a production line ---- */
-        .location-lane{
-            padding: 10px 16px;
-        }
-        .location-lane + .location-lane{
-            border-top: 1px solid var(--border);
-        }
-
-        .location-label{
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: var(--muted);
-            margin-bottom: 8px;
-        }
-
-        /* horizontal scroll strip */
-        .lane-scroll{
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 6px;
-        }
-        .lane-scroll::-webkit-scrollbar{ height: 6px; }
-        .lane-scroll::-webkit-scrollbar-thumb{ background: var(--border); border-radius: 4px; }
-        .lane-scroll::-webkit-scrollbar-track{ background: transparent; }
-
-        /* ---- Compact pallet tile ---- */
-        .pallet-tile{
-            flex: 0 0 auto;
-            width: 108px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform .1s ease, box-shadow .1s ease;
-        }
-        .pallet-tile:hover{
-            transform: translateY(-2px);
-            box-shadow: 0 3px 8px rgba(15,36,54,0.15);
-        }
-
-        .tile-header{
-            background: var(--navy);
-            color: #fff;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            padding: 4px 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .tile-dot{
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .tile-body{
-            background: var(--blue-light);
-            padding: 10px 6px;
-            text-align: center;
-        }
-        .tile-name{
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--navy-2);
-            line-height: 1.25;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .tile-spec{
-            font-size: 10px;
-            color: var(--muted);
-            margin-top: 3px;
-        }
 
         /* ---- Right panel (clanogram / pick-zone view) ---- */
         #layoutBackPics {
@@ -499,6 +397,9 @@
         body.modal-open{
             overflow: hidden;
         }
+        .colorL{
+            color: #d09029;
+        }
 
         /* ══════════════════════════════════════════════════════════════
            SMALL SCREENS
@@ -508,78 +409,7 @@
            real rack shape (row/column counts never change — that's the
            actual physical layout the picker is scanning against).
            ══════════════════════════════════════════════════════════════ */
-        @media (max-width: 860px){
-            body{
-                height: auto;
-            }
-            #dashboard{
-                height: auto;
-                min-height: 100vh;
-                display: block;
-            }
-            #home{
-                height: 56px;
-                font-size: 16px;
-            }
-            #palletStorage,
-            #layoutBackPics{
-                overflow-y: visible;
-                border: 0;
-                padding: 14px 14px 0;
-            }
-            #layoutBackPics{
-                border-top: 1px solid var(--border);
-                margin-top: 4px;
-                padding-top: 18px;
-            }
-            #layoutRack{
-                padding: 12px 14px;
-                height: auto;
-            }
 
-            /* Pallet tiles: a touch bigger so they're easy to tap */
-            .pallet-tile{ width: 96px; }
-
-            /* Planogram: shrink each slot down to a compact "light"
-               showing just the location number; full product info opens
-               in the tap popup instead of trying to fit on the shelf */
-            .planogram-cell{
-                padding: 6px 3px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                min-height: 46px;
-                text-align: center;
-            }
-            .cell-location{
-                margin-bottom: 0;
-                font-size: 12px;
-                padding: 3px 0;
-                width: 100%;
-            }
-            .cell-product,
-            .cell-spec,
-            .cell-itemid{
-                display: none;
-            }
-
-            /* Popups become a bottom sheet instead of a centered card —
-               easier to reach with a thumb and avoids tiny cramped modals */
-            .modal-overlay{
-                align-items: flex-end;
-                padding: 0;
-            }
-            .pallet-modal{
-                width: 100%;
-                border-radius: 14px 14px 0 0;
-                animation: sheetIn .18s ease-out;
-            }
-            @keyframes sheetIn{
-                from{ opacity: 0; transform: translateY(24px); }
-                to{ opacity: 1; transform: translateY(0); }
-            }
-        }
     </style>
 </head>
 <body>
@@ -587,20 +417,21 @@
         <div id="home">
 
             <nav id="nav">
-                <a href="index.html" class="current-select">
-                    <img
-                        src="main-board-system-icon.png"
-                        alt="Main Board"
-                        title="Main Board"
-                    >
-                </a>
-                <a href="warehouse.html">
+                <a href="warehouse.html" class="current-select">
                     <img
                         src="layouts-icon.png"
                         alt="Layouts"
                         title="Layouts"
                     >
                 </a>
+                <a href="index.html" >
+                    <img
+                        src="main-board-system-icon.png"
+                        alt="Main Board"
+                        title="Main Board"
+                    >
+                </a>
+
                 <a href="pallets.html">
                     <img
                         src="pallets-icon.png"
@@ -624,82 +455,7 @@
         </div>
 
     </div>
-        <div id="palletStorage">
-            <div id="palletSection">
-                <!-- Production Line 1 -->
-                <div class="production-line" id="production-1">
-                    <div class="production-line-header">Zone 1</div>
 
-                    <div class="location-lane" id="production-1-B">
-                        <div class="location-label">Location B</div>
-                        <div class="lane-scroll" id="production-1-B-scroll">
-                            <!-- pallet tiles injected here by JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Production Line 2 -->
-                <div class="production-line" id="production-2">
-                    <div class="production-line-header">Zone  2</div>
-
-                    <div class="location-lane" id="production-2-A">
-                        <div class="location-label">Location A</div>
-                        <div class="lane-scroll" id="production-2-A-scroll"></div>
-                    </div>
-
-                    <div class="location-lane" id="production-2-B">
-                        <div class="location-label">Location B</div>
-                        <div class="lane-scroll" id="production-2-B-scroll"></div>
-                    </div>
-                </div>
-                <!-- Production Line 3 -->
-                <div class="production-line" id="production-3">
-                    <div class="production-line-header">Zone  3</div>
-
-                    <div class="location-lane" id="production-3-A">
-                        <div class="location-label">Location A</div>
-                        <div class="lane-scroll" id="production-3-A-scroll"></div>
-                    </div>
-                </div> 
-                <!-- Production Line 4 -->
-                <div class="production-line" id="production-4">
-                    <div class="production-line-header">Zone  4</div>
-
-                    <div class="location-lane" id="production-4-A">
-                        <div class="location-label">Location A</div>
-                        <div class="lane-scroll" id="production-4-A-scroll"></div>
-                    </div>
-                </div>
-                <!-- Production Line 5 -->
-                <div class="production-line" id="production-5">
-                    <div class="production-line-header">Zone  5</div>
-
-                    <div class="location-lane" id="production-5-A">
-                        <div class="location-label">Location A</div>
-                        <div class="lane-scroll" id="production-5-A-scroll"></div>
-                    </div>
-
-                    <div class="location-lane" id="production-5-B">
-                        <div class="location-label">Location B</div>
-                        <div class="lane-scroll" id="production-5-B-scroll"></div>
-                    </div>
-                </div>                 
-
-                <!-- Freezer Rack -->
-                <div class="production-line" id="freezer">
-                    <div class="production-line-header">Freezer Rack</div>
-
-                    <div class="location-lane" id="freezer-A">
-                        <div class="location-label">Location A</div>
-                        <div class="lane-scroll" id="freezer-A-scroll"></div>
-                    </div>
-                    <div class="location-lane" id="freezer-B">
-                        <div class="location-label">Location B</div>
-                        <div class="lane-scroll" id="freezer-B-scroll"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div id="layoutBackPics">
             <div id="planogramSection">
@@ -707,7 +463,7 @@
             </div>
         </div>
 
-        <div id="layoutRack">Rack overview / summary strip goes here</div>
+       
     </div>
 
     <div class="modal-overlay" id="palletModal" aria-hidden="true">
@@ -764,276 +520,10 @@
 
 
     <script>
-        // ╔══════════════════════════════════════════════════════════════╗
-        // ║                                                                ║
-        // ║                    ⚠   R E S T R I C T E D                    ║
-        // ║                         E D I T   Z O N E                      ║
-        // ║                                                                ║
-        // ║  ──────────────────────────────────────────────────────────  ║
-        // ║                                                                ║
-        // ║   You may ONLY edit the pallet list directly below this        ║
-        // ║   banner. Everything above powers the layout — leave it        ║
-        // ║   untouched.                                                    ║
-        // ║                                                                ║
-        // ║     +  Add a pallet     →  copy a line, change the values      ║
-        // ║     −  Remove a pallet  →  delete its line                     ║
-        // ║                                                                ║
-        // ╚══════════════════════════════════════════════════════════════╝
-
-        class Pallet {
-            constructor(id, productName, spec, productType, productionLine, lane, pickZone, location) {
-                this.id = id;
-                this.productName = productName;
-                this.spec = spec;
-                this.productType = productType; // "Frozen" | "Dry" | "Produce"
-                this.productionLine = productionLine; // e.g. "production-1"
-                this.lane = lane; // "A" or "B" — controls which dashboard row it appears in
-                this.pickZone = pickZone; // shown inside the pop-up
-                this.location = location; // shown inside the pop-up
-            }
-        }
-
-        const pallets = [
-            // ╔══════════════════════════════════════════════════════════════╗
-            // ║                         Z O N E   1                          ║
-            // ╚══════════════════════════════════════════════════════════════╝
-            new Pallet("Z1-B1", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B2", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B3", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B4", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B5", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B6", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B7", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B8", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B9", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B10", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B11", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B12", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B13", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B14", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B15", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B16", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B17", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B18", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B19", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B20", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B21", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B22", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B23", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B24", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B25", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B26", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B27", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B28", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B29", "", "", "", "production-1", "B", "", ""),
-            new Pallet("Z1-B30", "", "", "", "production-1", "B", "", ""),
-            // ╔══════════════════════════════════════════════════════════════╗
-            // ║                         Z O N E   2                          ║
-            // ╚══════════════════════════════════════════════════════════════╝
-            new Pallet("Z2-A1", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A2", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A3", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A4", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A5", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A6", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A7", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A8", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A9", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A10", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A11", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A12", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A13", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A14", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A15", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A16", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A17", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A18", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A19", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A20", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A21", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A22", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A23", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A24", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A25", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A26", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A27", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A28", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A29", "", "", "", "production-2", "A", "", ""),
-            new Pallet("Z2-A30", "", "", "", "production-2", "A", "", ""),
-
-            new Pallet("Z2-B1", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B7", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B8", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B9", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B10", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B11", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B12", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B13", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B14", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B15", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B16", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B17", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B18", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B19", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B20", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B21", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B22", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B23", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B24", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B25", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B26", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B27", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B28", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B29", "", "", "", "production-2", "B", "", ""),
-            new Pallet("Z2-B30", "", "", "", "production-2", "B", "", ""),
-            // ╔══════════════════════════════════════════════════════════════╗
-            // ║                         Z O N E   3                          ║
-            // ╚══════════════════════════════════════════════════════════════╝
-            new Pallet("Z3-A1", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A2", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A3", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A4", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A5", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A6", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A7", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A8", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A9", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A10", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A11", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A12", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A13", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A14", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A15", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A16", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A17", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A18", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A19", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A20", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A21", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A22", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A23", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A24", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A25", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A26", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A27", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A28", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A29", "", "", "", "production-3", "A", "", ""),
-            new Pallet("Z3-A30", "", "", "", "production-3", "A", "", ""),
-            // ╔══════════════════════════════════════════════════════════════╗
-            // ║                         Z O N E   4                          ║
-            // ╚══════════════════════════════════════════════════════════════╝
-            new Pallet("Z4-A1", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A2", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A3", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A4", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A5", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A6", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A7", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A8", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A9", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A10", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A11", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A12", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A13", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A14", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A15", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A16", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A17", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A18", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A19", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A20", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A21", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A22", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A23", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A24", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A25", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A26", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A27", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A28", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A29", "", "", "", "production-4", "A", "", ""),
-            new Pallet("Z4-A30", "", "", "", "production-4", "A", "", ""),
-            // ╔══════════════════════════════════════════════════════════════╗
-            // ║                         Z O N E   5                          ║
-            // ╚══════════════════════════════════════════════════════════════╝
-            new Pallet("Z5-A1", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A2", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A3", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A4", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A5", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A6", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A7", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A8", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A9", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A10", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A11", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A12", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A13", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A14", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A15", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A16", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A17", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A18", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A19", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A20", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A21", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A22", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A23", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A24", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A25", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A26", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A27", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A28", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A29", "", "", "", "production-5", "A", "", ""),
-            new Pallet("Z5-A30", "", "", "", "production-5", "A", "", ""),
-
-            new Pallet("Z5-B1", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B7", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B8", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B9", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B10", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B11", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B12", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B13", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B14", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B15", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B16", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B17", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B18", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B19", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B20", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B21", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B22", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B23", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B24", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B25", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B26", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B27", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B28", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B29", "", "", "", "production-5", "B", "", ""),
-            new Pallet("Z5-B30", "", "", "", "production-5", "B", "", ""),
-
-
-            new Pallet("FR-1A", "Salmon", "20oz", "Frozen", "freezer", "A", "Pick Zone 8", "Location 1"),
-            new Pallet("FR-1B", "Hot Italian Sausage", "10oz", "Frozen", "freezer", "A", "Pick Zone 8", "Location 2"),
-            new Pallet("FR-1C", "Cooked Pulled Pork", "10oz", "Frozen", "freezer", "B", "Pick Zone 8", "Location 3"),
-
-        ];
-
-        // ── END OF EDIT ZONE ──────────────────────────────────────────────
-
-        // ╔══════════════════════════════════════════════════════════════╗
-        // ║   PLANOGRAM DATA (right panel)                                ║
-        // ║   A "layout" is one physical rack — it encloses however many  ║
-        // ║   pick zones sit on it. Add more layouts to this array for    ║
-        // ║   other racks (e.g. the one behind the picker) — each will    ║
-        // ║   render as its own enclosed card, stacked underneath.        ║
-        // ║                                                                ║
-        // ║   Inside a pick zone, rows/cells work the same as before:     ║
-        // ║   each row is a list of cells, `null` = a blank gap slot.     ║
-        // ╚══════════════════════════════════════════════════════════════╝
 
         const layouts = [
             {
+                name: "Layout 1",
                 pickZones: [
                     {
                         zone: 1,
@@ -1498,13 +988,13 @@
             //     pickZones: [ { zone: 2, rows: [ [ {...} ] ] } ]
             // }
         ];
-
         function renderPlanogramCell(cell, layoutName, zoneNum) {
             if (!cell) {
                 return `<div class="planogram-cell is-empty"></div>`;
             }
+            const statusClass = cell.status ? ` cell-status-${cell.status}` : "";
             return `
-                <div class="planogram-cell" data-layout="${layoutName}" data-zone="${zoneNum}" data-location="${cell.location}" role="button" tabindex="0" aria-label="View details for location ${cell.location}">
+                <div class="planogram-cell${statusClass}" data-layout="${layoutName}" data-zone="${zoneNum}" data-location="${cell.location}" role="button" tabindex="0" aria-label="View details for location ${cell.location}">
                     <span class="cell-location">Location: ${cell.location}</span>
                     <div class="cell-product">${cell.product}</div>
                     <div class="cell-spec">${cell.spec}</div>
@@ -1522,7 +1012,7 @@
 
             return `
                 <div class="planogram-zone">
-                    <div class="planogram-zone-header">Pick Zone ${pickZone.zone}</div>
+                    <div class="planogram-zone-header" class="colorL">Pick Zone ${pickZone.zone}</div>
                     ${rowsHtml}
                 </div>
             `;
@@ -1614,102 +1104,7 @@
             }
         });
 
-        const typeColor = {
-            "Frozen": "var(--accent-frozen)",
-            "Dry": "var(--accent-dry)",
-            "Produce": "var(--accent-produce)",
-            "Deactivate": "var(--muted)"
-        };
-
-        function renderTile(pallet) {
-            const color = typeColor[pallet.productType] || "var(--muted)";
-            return `
-                <div class="pallet-tile" id="${pallet.id}" data-pallet-id="${pallet.id}" role="button" tabindex="0" aria-label="View details for ${pallet.productName}">
-                    <div class="tile-header">
-                        <span>${pallet.id}</span>
-                        <span class="tile-dot" style="background:${color}"></span>
-                    </div>
-                    <div class="tile-body">
-                        <div class="tile-name">${pallet.productName}</div>
-                        <div class="tile-spec">${pallet.spec}</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Group pallets by production line + location, then fill each lane
-        const lanes = {};
-        pallets.forEach(p => {
-            const key = `${p.productionLine}-${p.lane}-scroll`;
-            if (!lanes[key]) lanes[key] = [];
-            lanes[key].push(p);
-        });
-
-        Object.entries(lanes).forEach(([laneId, list]) => {
-            const el = document.getElementById(laneId);
-            if (el) el.innerHTML = list.map(renderTile).join("");
-        });
-
-        // Open and close the pallet details pop-up
-        const modal = document.getElementById("palletModal");
-        const modalClose = document.getElementById("modalClose");
-        let lastFocusedTile = null;
-
-        function openPalletModal(pallet) {
-            const accent = typeColor[pallet.productType] || "var(--accent-frozen)";
-
-            document.getElementById("modalHeader").style.borderLeftColor = accent;
-            document.getElementById("modalPalletId").textContent = pallet.id;
-            document.getElementById("modalProductType").textContent = pallet.productType;
-            document.getElementById("modalProductName").textContent = pallet.productName || "Empty";
-            document.getElementById("modalProductSpec").textContent = pallet.spec || "No product specification";
-            document.getElementById("modalPickZone").textContent = pallet.pickZone || "Not assigned";
-            document.getElementById("modalLocation").textContent = pallet.location || "Not assigned";
-
-            modal.classList.add("is-open");
-            modal.setAttribute("aria-hidden", "false");
-            document.body.classList.add("modal-open");
-            modalClose.focus();
-        }
-
-        function closePalletModal() {
-            modal.classList.remove("is-open");
-            modal.setAttribute("aria-hidden", "true");
-            document.body.classList.remove("modal-open");
-            if (lastFocusedTile) lastFocusedTile.focus();
-        }
-
-        function selectPalletTile(tile) {
-            const pallet = pallets.find(p => p.id === tile.dataset.palletId);
-            if (!pallet) return;
-            lastFocusedTile = tile;
-            openPalletModal(pallet);
-        }
-
-        document.getElementById("palletSection").addEventListener("click", event => {
-            const tile = event.target.closest(".pallet-tile");
-            if (tile) selectPalletTile(tile);
-        });
-
-        document.getElementById("palletSection").addEventListener("keydown", event => {
-            const tile = event.target.closest(".pallet-tile");
-            if (tile && (event.key === "Enter" || event.key === " ")) {
-                event.preventDefault();
-                selectPalletTile(tile);
-            }
-        });
-
-        modalClose.addEventListener("click", closePalletModal);
-
-        modal.addEventListener("click", event => {
-            if (event.target === modal) closePalletModal();
-        });
-
-        document.addEventListener("keydown", event => {
-            if (event.key === "Escape" && modal.classList.contains("is-open")) {
-                closePalletModal();
-            }
-        });
+        
     </script>
 </body>
 </html>
