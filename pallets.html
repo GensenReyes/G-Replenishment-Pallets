@@ -361,24 +361,7 @@
         /* ══════════════════════════════════════════════════════════════
            SMALL SCREENS
            ══════════════════════════════════════════════════════════════ */
-        @media (max-width: 860px){
-            body{ height: auto; }
-            #dashboard{ height: auto; min-height: 100vh; display: block; }
-            #home{ height: 56px; font-size: 16px; }
-            #palletStorage{ overflow-y: visible; padding: 14px 14px 0; }
-            .pallet-tile{ width: 96px; }
 
-            .modal-overlay{ align-items: flex-end; padding: 0; }
-            .pallet-modal{
-                width: 100%;
-                border-radius: 14px 14px 0 0;
-                animation: sheetIn .18s ease-out;
-            }
-            @keyframes sheetIn{
-                from{ opacity: 0; transform: translateY(24px); }
-                to{ opacity: 1; transform: translateY(0); }
-            }
-        }
     </style>
 </head>
 <body>
